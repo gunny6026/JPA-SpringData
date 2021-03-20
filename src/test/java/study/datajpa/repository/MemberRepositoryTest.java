@@ -6,8 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
+import study.datajpa.dto.MemberDTO;
 import study.datajpa.entity.Member;
+import study.datajpa.entity.Team;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,6 +24,8 @@ public class MemberRepositoryTest {
 
     @Autowired
     MemberRepository memberRepository;
+    @Autowired
+    TeamRepository teamRepository;
 
     @Test
     public void TestMember() {
@@ -117,6 +123,69 @@ public class MemberRepositoryTest {
 
         assertThat(mm.getUsername()).isEqualTo(findMember.get(0).getUsername());
         assertThat(findMember.size()).isEqualTo(1);
+    }
+
+    @Test
+    public void findUsernameList(){
+
+        Member mm = new Member("음바페", 20);
+        Member m2 = new Member("홀란드",21);
+
+        memberRepository.save(mm);
+        memberRepository.save(m2);
+
+        List<String> findUsernameList = memberRepository.findUsernameList();
+
+       assertThat(findUsernameList.get(0)).isEqualTo("음바페");
+       assertThat(findUsernameList.size()).isEqualTo(2);
+    }
+
+    @Test
+    public void findMemberDto(){
+
+        Team t1 = new Team("파리 생제르망");
+        teamRepository.save(t1);
+
+        Member mm = new Member("음바페", 20);
+        mm.setTeam(t1);
+        memberRepository.save(mm);
+
+        List<MemberDTO> memberDto = memberRepository.findMemberDto();
+
+        for (MemberDTO memberDTO : memberDto) {
+        System.out.println("memberDtO ====> " +memberDTO);
+
+        }
+
+    }
+
+    @Test
+    public void findByNamesTest(){
+
+        Team t1 = new Team("파리 생제르망");
+        teamRepository.save(t1);
+
+        Member mm = new Member("음바페", 20);
+        mm.setTeam(t1);
+        Member m2 = new Member("즐라탄",41);
+        Member m3 = new Member("호날두",36);
+        Member m4 = new Member("메시",34);
+        memberRepository.save(mm);
+        memberRepository.save(m2);
+        memberRepository.save(m3);
+        memberRepository.save(m4);
+
+//        List<String> usernameList = memberRepository.findUsernameList();
+       List<String> array = new ArrayList<>();
+       array.add("호날두");
+       array.add("메시");
+
+//        List<Member> byNames = memberRepository.findByNames(array);
+        List<Member> byNames = memberRepository.findByNames(Arrays.asList("즐라탄","음바페"));
+        for (Member byName : byNames) {
+            System.out.println("byName = "+byName);
+        }
+
     }
 
 
