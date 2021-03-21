@@ -4,12 +4,17 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import study.datajpa.dto.MemberDTO;
 import study.datajpa.entity.Member;
 import study.datajpa.entity.Team;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -26,6 +31,10 @@ public class MemberRepositoryTest {
     MemberRepository memberRepository;
     @Autowired
     TeamRepository teamRepository;
+    @PersistenceContext
+    EntityManager entityManager;
+
+
 
     @Test
     public void TestMember() {
@@ -187,6 +196,75 @@ public class MemberRepositoryTest {
         }
 
     }
+
+    @Test
+    public void paging(){
+
+        //given
+        memberRepository.save(new Member("member1",10));
+        memberRepository.save(new Member("member2",10));
+        memberRepository.save(new Member("member3",10));
+        memberRepository.save(new Member("member4",10));
+        memberRepository.save(new Member("member5",10));
+        memberRepository.save(new Member("member77",15));
+
+
+        int age =10;
+        PageRequest pageRequest = PageRequest.of(0, 3, Sort.by(Sort.Direction.DESC, "username"));
+
+        //when
+        Page<Member> page = memberRepository.findByAge(age, pageRequest);
+
+        Page<MemberDTO> toMap = page.map(m -> new MemberDTO(m.getId(), m.getUsername(), null));
+
+        //then
+        List<Member> content = page.getContent();
+
+
+        long totalElements = page.getTotalElements();
+
+
+//        for (Member member : content) {
+//            System.out.println("member = " + member);
+//        }
+//        System.out.println("totalElements = " +totalElements);
+
+        assertThat(content.size()).isEqualTo(3);
+        assertThat(page.getTotalElements()).isEqualTo(5);
+        assertThat(page.getNumber()).isEqualTo(0);
+        assertThat(page.getTotalPages()).isEqualTo(2);
+        assertThat(page.isFirst()).isTrue();
+        assertThat(page.hasNext()).isTrue();
+
+
+    }
+
+    @Test
+    public void bulkUpdate(){
+
+
+        memberRepository.save(new Member("member1",20));
+        memberRepository.save(new Member("member2",30));
+        memberRepository.save(new Member("member3",31));
+        memberRepository.save(new Member("member4",32));
+        memberRepository.save(new Member("member5",33));
+        memberRepository.save(new Member("member6",34));
+
+        int i = memberRepository.bulkAgePlus(33);
+//        entityManager.flush();
+//        entityManager.clear();
+
+        List<Member> result = memberRepository.findByUsername("member6");
+
+        Member member = result.get(0);
+
+        System.out.println("member = "+member);
+
+        assertThat(i).isEqualTo(2);
+
+
+    }
+
 
 
 }

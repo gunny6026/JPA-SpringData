@@ -133,4 +133,27 @@ class MemberJpaRepositoryTest {
 
     }
 
+    @Test
+    public void bulkUpdate(){
+
+//        Member member = new Member("멤버1",20);
+//        Member member2 = new Member("멤버2",22);
+//        Member member3 = new Member("멤버3",25);
+
+        memberJpaRepository.save(new Member("member1",20));
+        memberJpaRepository.save(new Member("member2",30));
+        memberJpaRepository.save(new Member("member3",31));
+        memberJpaRepository.save(new Member("member4",32));
+        memberJpaRepository.save(new Member("member5",33));
+        memberJpaRepository.save(new Member("member6",34));
+
+        int i = memberJpaRepository.bulkAgePlus(33);
+
+        assertThat(i).isEqualTo(2);
+
+
+    }
+
+
+
 }
