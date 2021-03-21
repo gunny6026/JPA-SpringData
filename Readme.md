@@ -22,3 +22,6 @@
 - [스프링데이터JPA](쿼리메소드기능/스프링데이터JPA.md)
 - [벌크성수정쿼리](쿼리메소드기능/벌크성수정쿼리.md)
 - [@EntityGraph](쿼리메소드기능/@EntityGraph.md)
+- [JPA Hint & Lock](쿼리메소드기능/JPA%20Hint%20&%20Lock.md)
+
+## 확장기능

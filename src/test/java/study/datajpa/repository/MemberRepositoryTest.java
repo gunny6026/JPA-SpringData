@@ -298,6 +298,48 @@ public class MemberRepositoryTest {
 
     }
 
+    @Test
+    public void queryHint() {
+        //given
+        Member member1 = new Member("member1", 10);
+        memberRepository.save(member1);
+        entityManager.flush();
+        entityManager.clear();
+        //when
+
+        Member findMember = memberRepository.findReadOnlyByUsername("member1");
+//        findMember.setUsername("member2");
+
+
+        entityManager.flush();
+        //then
+
+    }
+
+    @Test
+    public void lock() {
+        //given
+        Member member1 = new Member("member1", 10);
+        memberRepository.save(member1);
+        entityManager.flush();
+        entityManager.clear();
+        //when
+
+
+        List<Member> result = memberRepository.findLockByUsername("member1");
+//        findMember.setUsername("member2");
+
+
+        entityManager.flush();
+        //then
+
+    }
+
+
+    @Test
+    public void callCustom(){
+        List<Member> memberCustom = memberRepository.findMemberCustom();
+    }
 
 
 }
