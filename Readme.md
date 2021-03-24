@@ -25,3 +25,6 @@
 - [JPA Hint & Lock](쿼리메소드기능/JPA%20Hint%20&%20Lock.md)
 
 ## 확장기능
+
+- [사용자정의 리포지토리 구현](확장기능/사용자정의리포지토리구현.md)
+- [Auditing](확장기능/auditing.md)
